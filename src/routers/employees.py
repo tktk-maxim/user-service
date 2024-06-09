@@ -19,7 +19,7 @@ class Status(BaseModel):
 
 
 @router.post("/create/", response_model=EmployeeIn)
-async def create_employee_view(employee: Annotated[dict, Depends(EmployeeCreate)]):
+async def create_employee_view(employee: EmployeeCreate):
     employee_obj = await create_entity(pydantic_model_class=EmployeeCreate,
                                        tortoise_model_class=Employee, entity=employee)
     return employee_obj
@@ -38,7 +38,7 @@ async def get_card_employee_view(employee_id: int):
 
 
 @router.put("/{employee_id}", response_model=EmployeeIn)
-async def update_employee_view(employee_id: int, employee: Annotated[dict, Depends(EmployeeCreate)]):
+async def update_employee_view(employee_id: int, employee: EmployeeCreate):
     employee_obj = await update_entity(pydantic_model_class=EmployeeCreate,
                                        tortoise_model_class=Employee, entity=employee, entity_id=employee_id)
     return await employee_obj

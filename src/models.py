@@ -1,19 +1,19 @@
-
-from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.models import Model
 from tortoise import fields
 
 
 class Employee(Model):
-    full_name = fields.CharField(max_length=255)
+    first_name = fields.CharField(max_length=255)
+    last_name = fields.CharField(max_length=255)
+    middle_name = fields.CharField(max_length=255, default=None, null=True)
     login = fields.CharField(max_length=50)
     password = fields.CharField(max_length=50)
-    email = fields.CharField(max_length=100, null=True)
+    email = fields.CharField(max_length=100)
     subdivision = fields.ForeignKeyField('models.Subdivision', on_delete=fields.CASCADE)
     leader = fields.BooleanField(default=False, null=True)
 
     def __str__(self):
-        return self.full_name
+        return self.last_name
 
 
 class Event(Model):
@@ -31,13 +31,3 @@ class Subdivision(Model):
 
     def __str__(self):
         return self.name
-
-
-Employee_pydantic = pydantic_model_creator(Employee, name="Employee")
-Employee_pydantic_no_ids = pydantic_model_creator(Employee, name="EmployeeIn", exclude_readonly=True)
-
-Subdivision_pydantic = pydantic_model_creator(Subdivision, name="Subdivision")
-Subdivision_pydantic_no_ids = pydantic_model_creator(Subdivision, name="SubdivisionIn", exclude_readonly=True)
-
-Event_pydantic = pydantic_model_creator(Event, name="Event")
-Event_pydantic_no_ids = pydantic_model_creator(Event, name="EventIn", exclude_readonly=True)

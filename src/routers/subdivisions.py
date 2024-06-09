@@ -1,7 +1,6 @@
-from typing import List, Annotated
+from typing import List
 
-from fastapi import APIRouter, Depends
-
+from fastapi import APIRouter
 from schemas import SubdivisionCreate, SubdivisionIn
 from models import Subdivision
 from crud import get_all_entity, update_entity, delete_entity, get_entity, create_entity
@@ -13,7 +12,7 @@ router = APIRouter(
 
 
 @router.post("/create/", response_model=SubdivisionIn)
-async def create_subdivision(subdivision: Annotated[dict, Depends(SubdivisionCreate)]):
+async def create_subdivision(subdivision: SubdivisionCreate):
     subdivision_obj = await create_entity(pydantic_model_class=SubdivisionCreate,
                                           tortoise_model_class=Subdivision, entity=subdivision)
     return subdivision_obj
@@ -32,7 +31,7 @@ async def get_subdivision(subdivision_id: int):
 
 
 @router.put("/{subdivision_id}", response_model=SubdivisionIn)
-async def update_subdivision_view(subdivision_id: int, subdivision: Annotated[dict, Depends(SubdivisionCreate)]):
+async def update_subdivision_view(subdivision_id: int, subdivision: SubdivisionCreate):
     subdivision_obj = await update_entity(pydantic_model_class=SubdivisionCreate,
                                           tortoise_model_class=Subdivision, entity=subdivision,
                                           entity_id=subdivision_id)

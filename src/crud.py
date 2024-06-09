@@ -1,13 +1,11 @@
-from fastapi import HTTPException, Depends
-from typing import List, TypeVar, Type, Dict, Annotated
+from fastapi import HTTPException
+from typing import List, TypeVar, Type, Dict
 
 from pydantic import BaseModel
 from tortoise import Model
 from tortoise.exceptions import DoesNotExist
-from tortoise.queryset import QuerySetSingle, QuerySet
 
-from models import Employee, Subdivision
-from schemas import EventCreate, EmployeeCreate, SubdivisionCreate, EmployeeCard
+from models import Employee
 
 AnyPydanticModel = TypeVar('AnyPydanticModel', bound=BaseModel)
 AnyTortoiseModel = TypeVar('AnyTortoiseModel', bound=Model)
@@ -34,7 +32,10 @@ async def get_all_entity(tortoise_model_class: Type[AnyTortoiseModel]) -> List[A
 
 
 async def get_entity(tortoise_model_class: Type[AnyTortoiseModel], entity_id: int) -> AnyTortoiseModel:
-    return await tortoise_model_class.get(id=entity_id)
+    try:
+        return await tortoise_model_class.get(id=entity_id)
+    except DoesNotExist:
+        raise HTTPException(status_code=404, detail=f"Entity obj with id: {entity_id} not found")
 
 
 async def delete_entity(tortoise_model_class: Type[AnyTortoiseModel], entity_id: int):
@@ -56,7 +57,9 @@ async def get_employee_card(employee_id: int) -> Dict:
 
 async def search_employee(employee_data: str) -> List[Employee]:
     if ' ' in employee_data:
-        return await Employee.filter(full_name=employee_data)
+        data = employee_data.split()
+        return await Employee.filter(first_name=data[0], last_name=data[1],
+                                     middle_name=data[2] if len(data) == 3 else None)
     elif '@' in employee_data:
         return await Employee.filter(email=employee_data)
     return await Employee.filter(login=employee_data)

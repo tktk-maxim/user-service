@@ -5,6 +5,7 @@ import pytest
 from asgi_lifespan import LifespanManager
 from dotenv import load_dotenv
 from httpx import ASGITransport, AsyncClient
+from tortoise import Tortoise
 
 from src.main import app
 
@@ -12,10 +13,6 @@ from src.main import app
 @pytest.fixture(scope="module")
 def anyio_backend() -> str:
     return "asyncio"
-
-
-
-
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -31,3 +28,10 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as c:
             yield c
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def clean_database_after_tests():
+    yield
+    for model in Tortoise.apps["models"].values():
+        await model.all().delete()

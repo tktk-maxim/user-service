@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.post("/create/", response_model=EventIn)
-async def create_event(event: Annotated[dict, Depends(EventCreate)]):
+async def create_event(event: EventCreate):
     event_obj = await create_entity(pydantic_model_class=EventCreate,
                                     tortoise_model_class=Event, entity=event)
     return event_obj
@@ -32,7 +32,7 @@ async def get_event(event_id: int):
 
 
 @router.put("/{event_id}", response_model=EventIn)
-async def update_event_view(event_id: int, event: Annotated[dict, Depends(EventCreate)]):
+async def update_event_view(event_id: int, event: EventCreate):
     event_obj = await update_entity(pydantic_model_class=EventCreate, tortoise_model_class=Event,
                                     entity=event, entity_id=event_id)
     return await event_obj

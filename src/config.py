@@ -12,3 +12,14 @@ def get_database_url():
 
 DATABASE_URL = get_database_url()
 
+
+DATABASE_CONFIG = {
+    "connections": {"default": os.getenv('DATABASE_URL')},
+    "apps": {
+        "models": {
+            "models": ["models", "aerich.models"],
+            "default_connection": "default",
+        },
+    },
+}
+

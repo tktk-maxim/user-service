@@ -11,11 +11,11 @@ from routers.subdivisions import router as router_subdivision
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
     print(f"Connecting to database at {DATABASE_URL}")
 
     async with RegisterTortoise(
-        app,
+        application,
         db_url=DATABASE_URL,
         modules={"models": ["models"]},
         generate_schemas=True,
