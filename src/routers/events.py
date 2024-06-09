@@ -1,6 +1,6 @@
-from typing import Annotated, List
+from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from crud import get_all_entity, update_entity, delete_entity, create_entity, get_entity
 from models import Event

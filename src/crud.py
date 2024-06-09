@@ -58,8 +58,9 @@ async def get_employee_card(employee_id: int) -> Dict:
 async def search_employee(employee_data: str) -> List[Employee]:
     if ' ' in employee_data:
         data = employee_data.split()
+        print(data, len(data))
         return await Employee.filter(first_name=data[0], last_name=data[1],
-                                     middle_name=data[2] if len(data) == 3 else None)
+                                     middle_name=data[2] if len(data) == 3 else "")
     elif '@' in employee_data:
         return await Employee.filter(email=employee_data)
     return await Employee.filter(login=employee_data)

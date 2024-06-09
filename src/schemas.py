@@ -18,6 +18,10 @@ class EventCreate(BaseModel):
     employee_id: int
 
 
+class EventIn(EventCreate):
+    id: int
+
+
 class EmployeeCreate(BaseModel):
     first_name: str
     last_name: str
@@ -36,7 +40,3 @@ class EmployeeIn(EmployeeCreate):
 class EmployeeCard(BaseModel):
     employee: EmployeeCreate
     events: EventCreate | None = Field(default=None, null=True)
-
-
-class EventIn(EventCreate):
-    id: int

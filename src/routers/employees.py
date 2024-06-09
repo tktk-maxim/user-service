@@ -1,5 +1,4 @@
-from fastapi import Depends
-from typing import List, Annotated
+from typing import List
 
 from fastapi import APIRouter
 from pydantic import BaseModel
@@ -51,4 +50,5 @@ async def delete_employee_view(employee_id: int):
 
 @router.get("/search/", response_model=List[EmployeeIn])
 async def search_employee_view(employee_data: str):
+    print(employee_data, 1)
     return await search_employee(employee_data)
