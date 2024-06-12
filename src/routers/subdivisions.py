@@ -13,8 +13,7 @@ router = APIRouter(
 
 @router.post("/create/", response_model=SubdivisionIn)
 async def create_subdivision(subdivision: SubdivisionCreate):
-    subdivision_obj = await create_entity(pydantic_model_class=SubdivisionCreate,
-                                          tortoise_model_class=Subdivision, entity=subdivision)
+    subdivision_obj = await create_entity(tortoise_model_class=Subdivision, entity=subdivision)
     return subdivision_obj
 
 
@@ -32,8 +31,7 @@ async def get_subdivision(subdivision_id: int):
 
 @router.put("/{subdivision_id}", response_model=SubdivisionIn)
 async def update_subdivision_view(subdivision_id: int, subdivision: SubdivisionCreate):
-    subdivision_obj = await update_entity(pydantic_model_class=SubdivisionCreate,
-                                          tortoise_model_class=Subdivision, entity=subdivision,
+    subdivision_obj = await update_entity(tortoise_model_class=Subdivision, entity=subdivision,
                                           entity_id=subdivision_id)
     return await subdivision_obj
 

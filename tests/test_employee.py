@@ -20,6 +20,22 @@ async def test_positive_create_employee(client: AsyncClient) -> None:
 
 
 @pytest.mark.anyio
+async def test_negative_create_without_first_name(client: AsyncClient) -> None:
+    response = await client.post("/employee/create/", json={
+      "first_name": "",
+      "last_name": "Ivanov",
+      "middle_name": None,
+      "login": "t_log",
+      "password": "t_log",
+      "subdivision_id": "str",
+      "email": "user@example.com",
+      "leader": True
+    })
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["msg"] == "Value error, Field cannot be empty"
+
+
+@pytest.mark.anyio
 async def test_negative_create_employee(client: AsyncClient) -> None:
     response = await client.post("/employee/create/", json={
       "first_name": "Ivan",
@@ -63,13 +79,14 @@ async def test_positive_get_employee(client: AsyncClient) -> None:
     response = await client.get(f"/employee/card/{employee_id}")
     assert response.status_code == 200
     assert response.json()["employee"] is not None
+    assert response.json()["events"] is not None
 
 
 @pytest.mark.anyio
 async def test_negative_get_employee(client: AsyncClient) -> None:
     response = await client.get(f"/employee/card/{-1}")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Employee not found"
+    assert response.json()["detail"] == "Employee obj with id: -1 not found"
 
 
 @pytest.mark.anyio
@@ -77,7 +94,7 @@ async def test_positive_search_employee(client: AsyncClient) -> None:
     response = await client.get("/employee/all/")
 
     employee_login = response.json()[-1]["login"]
-    employee_full_name = str(response.json()[-1]["first_name"]+' '+response.json()[-1]["last_name"]+
+    employee_full_name = str(response.json()[-1]["last_name"]+' '+response.json()[-1]["first_name"] +
                              ' '+response.json()[-1]["middle_name"])
     employee_email = response.json()[-1]["email"]
 

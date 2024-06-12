@@ -26,6 +26,22 @@ async def test_positive_create_event(client: AsyncClient) -> None:
 
 
 @pytest.mark.anyio
+async def test_negative_create_event(client: AsyncClient) -> None:
+    response = await client.get("/employee/all/")
+    assert response.status_code == 200
+
+    response = await client.post("/event/create/", json={
+      "begin": "2024-06-09",
+      "end": "2024-06-12",
+      "description": "HB",
+      "employee_id": response.json()[-1]["id"]
+    })
+
+    assert response.status_code == 422
+    assert response.json()["detail"] == "Intersection with another event (check the list of events and try again)"
+
+
+@pytest.mark.anyio
 async def test_positive_update_event(client: AsyncClient) -> None:
     response = await client.get("/event/all/")
     assert response.status_code == 200
@@ -52,7 +68,7 @@ async def test_positive_get_event(client: AsyncClient) -> None:
 async def test_negative_get_event(client: AsyncClient) -> None:
     response = await client.get(f"/event/{-1}")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Entity obj with id: -1 not found"
+    assert response.json()["detail"] == "Event obj with id: -1 not found"
 
 
 @pytest.mark.anyio
@@ -61,4 +77,3 @@ async def test_positive_delete_event(client: AsyncClient) -> None:
     event_id = response.json()[-1]["id"]
     response = await client.delete(f"/event/{event_id}")
     assert response.json()["deleted"] is True
-

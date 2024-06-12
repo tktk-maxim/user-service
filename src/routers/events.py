@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter
 
-from crud import get_all_entity, update_entity, delete_entity, create_entity, get_entity
+from crud import get_all_entity, update_entity, delete_entity, create_entity, get_entity, validation_date
 from models import Event
 from schemas import EventIn, EventCreate
 
@@ -14,8 +14,8 @@ router = APIRouter(
 
 @router.post("/create/", response_model=EventIn)
 async def create_event(event: EventCreate):
-    event_obj = await create_entity(pydantic_model_class=EventCreate,
-                                    tortoise_model_class=Event, entity=event)
+    await validation_date(event_data=event)
+    event_obj = await create_entity(tortoise_model_class=Event, entity=event)
     return event_obj
 
 
@@ -33,8 +33,8 @@ async def get_event(event_id: int):
 
 @router.put("/{event_id}", response_model=EventIn)
 async def update_event_view(event_id: int, event: EventCreate):
-    event_obj = await update_entity(pydantic_model_class=EventCreate, tortoise_model_class=Event,
-                                    entity=event, entity_id=event_id)
+    await validation_date(event_data=event, event_id=event_id)
+    event_obj = await update_entity(tortoise_model_class=Event, entity=event, entity_id=event_id)
     return await event_obj
 
 
