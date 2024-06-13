@@ -4,8 +4,9 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from crud import create_entity, get_all_entity, get_employee_card, delete_entity, update_entity, search_employee
+from crud import checking_id_for_existence
 from schemas import EmployeeIn, EmployeeCreate, EmployeeCard
-from models import Employee
+from models import Employee, Subdivision
 
 
 router = APIRouter(
@@ -19,8 +20,8 @@ class Status(BaseModel):
 
 @router.post("/create/", response_model=EmployeeIn)
 async def create_employee_view(employee: EmployeeCreate):
-    employee_obj = await create_entity(pydantic_model_class=EmployeeCreate,
-                                       tortoise_model_class=Employee, entity=employee)
+    await checking_id_for_existence(Subdivision, employee.subdivision_id)
+    employee_obj = await create_entity(tortoise_model_class=Employee, entity=employee)
     return employee_obj
 
 
@@ -38,8 +39,8 @@ async def get_card_employee_view(employee_id: int):
 
 @router.put("/{employee_id}", response_model=EmployeeIn)
 async def update_employee_view(employee_id: int, employee: EmployeeCreate):
-    employee_obj = await update_entity(pydantic_model_class=EmployeeCreate,
-                                       tortoise_model_class=Employee, entity=employee, entity_id=employee_id)
+    await checking_id_for_existence(Subdivision, employee.subdivision_id)
+    employee_obj = await update_entity(tortoise_model_class=Employee, entity=employee, entity_id=employee_id)
     return await employee_obj
 
 
@@ -50,5 +51,4 @@ async def delete_employee_view(employee_id: int):
 
 @router.get("/search/", response_model=List[EmployeeIn])
 async def search_employee_view(employee_data: str):
-    print(employee_data, 1)
     return await search_employee(employee_data)

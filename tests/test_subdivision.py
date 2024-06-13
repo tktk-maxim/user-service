@@ -30,7 +30,7 @@ async def test_positive_get_subdivisions(client: AsyncClient) -> None:
 async def test_negative_get_subdivision(client: AsyncClient) -> None:
     response = await client.get(f"/subdivision/{-1}")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Entity obj with id: -1 not found"
+    assert response.json()["detail"] == "Subdivision obj with id: -1 not found"
 
 
 @pytest.mark.anyio
@@ -54,4 +54,4 @@ async def test_positive_delete_subdivision(client: AsyncClient) -> None:
 async def test_negative_delete_subdivision(client: AsyncClient) -> None:
     response = await client.delete(f"/subdivision/{-1}")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Entity obj with id: -1 not found"
+    assert response.json()["detail"] == "Subdivision obj with id: -1 not found"
