@@ -1,4 +1,3 @@
-*.env
 .venv
-.coverage
+Dockerfile
 /__pycache__/

@@ -27,7 +27,8 @@ async def validation_date(event_data: AnyPydanticModel, event_id=-1):
 
     events = await Event.filter(employee_id=event_data.employee_id)
     for event in events:
-        if (event.id != event_id) and ((event_data.begin <= event.begin <= event_data.end) or (event.end >= event_data.begin >= event.begin)):
+        if (event.id != event_id) and ((event_data.begin <= event.begin <= event_data.end)
+                                       or (event.end >= event_data.begin >= event.begin)):
             raise HTTPException(status_code=422,
                                 detail=f'Intersection with another event (check the list of events and try again)')
 
