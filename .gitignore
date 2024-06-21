@@ -1,8 +1,5 @@
-*.env
+__pycache__/
+.env
 .venv
 .coverage
-<<<<<<< HEAD
-__pycache__/
-=======
-__pycache__/
->>>>>>> develop
+.env-non-dev

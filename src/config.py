@@ -18,7 +18,7 @@ else:
 
 
 DATABASE_CONFIG = {
-    "connections": {"default": os.getenv('DATABASE_URL')},
+    "connections": {"default": f"postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"},
     "apps": {
         "models": {
             "models": ["models", "aerich.models"],

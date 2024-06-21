@@ -1,0 +1,23 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - docker compose -f docker/docker-compose.yml down
+    - docker compose -f docker/docker-compose.yml build
+
+
+test:
+  stage: test
+  script:
+    - docker compose -f docker/docker-compose.yml up  --abort-on-container-exit
+  dependencies:
+    - build
+
