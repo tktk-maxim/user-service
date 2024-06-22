@@ -72,12 +72,25 @@ async def get_employee_card(employee_id: int) -> Dict:
             'events': await Event.filter(employee_id=employee_id).order_by('begin')}
 
 
-async def search_employee(employee_data: str) -> List[Employee]:
-    if ' ' in employee_data:
-        data = employee_data.split()
-        print(data, len(data))
-        return await Employee.filter(last_name=data[0], first_name=data[1],
-                                     middle_name=data[2] if len(data) == 3 else "")
-    elif '@' in employee_data:
-        return await Employee.filter(email=employee_data)
-    return await Employee.filter(login=employee_data)
+async def search_employee(first_name: str, last_name: str, middle_name: str,
+                          login: str, email: str) -> List[Employee]:
+
+    response = Employee.all()
+
+    flag = False
+    if first_name != "":
+        flag = True
+        response = response.filter(first_name=first_name)
+    if last_name != "":
+        flag = True
+        response = response.filter(last_name=last_name)
+    if middle_name != "":
+        flag = True
+        response = response.filter(middle_name=middle_name)
+    if login != "":
+        flag = True
+        response = response.filter(login=login)
+    if email != "":
+        flag = True
+        response = response.filter(email=email)
+    return await response if flag else []

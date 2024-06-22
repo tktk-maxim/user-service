@@ -50,5 +50,6 @@ async def delete_employee_view(employee_id: int):
 
 
 @router.get("/search/", response_model=List[EmployeeIn])
-async def search_employee_view(employee_data: str):
-    return await search_employee(employee_data)
+async def search_employee_view(first_name="", last_name="", middle_name="",
+                               login="", email=""):
+    return await search_employee(first_name, last_name, middle_name, login, email)

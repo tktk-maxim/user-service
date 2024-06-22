@@ -94,21 +94,18 @@ async def test_positive_search_employee(client: AsyncClient) -> None:
     response = await client.get("/employee/all/")
 
     employee_login = response.json()[-1]["login"]
-    employee_full_name = str(response.json()[-1]["last_name"]+' '+response.json()[-1]["first_name"] +
-                             ' '+response.json()[-1]["middle_name"])
+    employee_first_name = response.json()[-1]["first_name"]
     employee_email = response.json()[-1]["email"]
 
-    response = await client.get(f"/employee/search/?employee_data={employee_login}")
+    response = await client.get(f"/employee/search/?first_name={employee_first_name}")
+    assert response.status_code == 200
+    assert response.json()[0]["first_name"] == employee_first_name
+
+    response = await client.get(f"/employee/search/?login={employee_login}")
     assert response.status_code == 200
     assert response.json()[0]["login"] == employee_login
 
-    response = await client.get(f"/employee/search/?employee_data={employee_full_name}")
-    assert response.status_code == 200
-    print(employee_full_name)
-    print(response.json())
-    assert response.json()[0]["first_name"] is not None
-
-    response = await client.get(f"/employee/search/?employee_data={employee_email}")
+    response = await client.get(f"/employee/search/?email={employee_email}")
     assert response.status_code == 200
     assert response.json()[0]["email"] == employee_email
 
