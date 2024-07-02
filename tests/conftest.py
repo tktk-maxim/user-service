@@ -8,6 +8,7 @@ from httpx import ASGITransport, AsyncClient
 from tortoise import Tortoise
 
 from src.main import app
+from src.config import settings
 
 
 @pytest.fixture(scope="module")
@@ -17,9 +18,7 @@ def anyio_backend() -> str:
 
 @pytest.fixture(scope='session', autouse=True)
 def set_test_database_url():
-    load_dotenv()
-    os.environ['PYTEST_RUNNING'] = 'true'
-    print(f"PYTEST_RUNNING set to: {os.getenv('PYTEST_RUNNING')}")
+    settings.run_test = True
 
 
 @pytest.fixture(scope="function")

@@ -24,10 +24,5 @@ test:
 
 review:
   stage: review
-  only:
-    - develop
-    - ci
   script:
     - docker compose -f docker/docker-compose-lint.yml up  --abort-on-container-exit
-  allow_failure: true
-

@@ -3,7 +3,7 @@ from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import RegisterTortoise
-from config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
+from config import get_db_url, settings
 
 from routers.employees import router as router_employee
 from routers.events import router as router_event
@@ -12,11 +12,11 @@ from routers.subdivisions import router as router_subdivision
 
 @asynccontextmanager
 async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
-    print(f"Connecting DB postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+    print(f"Connecting DB {get_db_url(settings.run_test)}")
 
     async with RegisterTortoise(
         application,
-        db_url=f"postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
+        db_url=get_db_url(settings.run_test),
         modules={"models": ["models"]},
         generate_schemas=True,
         add_exception_handlers=True,

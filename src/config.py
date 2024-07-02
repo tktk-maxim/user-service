@@ -1,24 +1,41 @@
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+from pydantic_settings import BaseSettings
 
-if os.getenv('PYTEST_RUNNING') == 'true':
-    DB_HOST = os.getenv('TEST_DB_HOST')
-    DB_PORT = os.getenv('TEST_DB_PORT')
-    DB_NAME = os.getenv('TEST_DB_NAME')
-    DB_USER = os.getenv('TEST_DB_USER')
-    DB_PASS = os.getenv('TEST_DB_PASS')
-else:
-    DB_HOST = os.getenv('DB_HOST')
-    DB_PORT = os.getenv('DB_PORT')
-    DB_NAME = os.getenv('DB_NAME')
-    DB_USER = os.getenv('DB_USER')
-    DB_PASS = os.getenv('DB_PASS')
+
+class Settings(BaseSettings):
+    db_user: str
+    db_password: str
+    db_host: str
+    db_port: str
+    db_name: str
+
+    run_test: bool
+
+    test_db_user: str = None
+    test_db_password: str = None
+    test_db_host: str = None
+    test_db_port: str = None
+    test_db_name: str = None
+
+    class Config:
+        env_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+
+
+settings = Settings()
+
+
+def get_db_url(test: bool) -> str:
+    if test:
+        return (f'postgres://{settings.test_db_user}:{settings.test_db_password}'
+                f'@{settings.test_db_host}:{settings.test_db_port}/{settings.test_db_name}')
+    return (f'postgres://{settings.db_user}:{settings.db_password}'
+            f'@{settings.db_host}:{settings.db_port}/{settings.db_name}')
 
 
 DATABASE_CONFIG = {
-    "connections": {"default": f"postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"},
+    "connections": {"default": f"postgres://{settings.db_user}:{settings.db_password}"
+                               f"@{settings.db_host}:{settings.db_port}/{settings.db_name}"},
     "apps": {
         "models": {
             "models": ["models", "aerich.models"],
