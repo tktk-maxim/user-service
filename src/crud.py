@@ -1,5 +1,6 @@
-from fastapi import HTTPException
 from typing import List, TypeVar, Type, Dict
+from fastapi import HTTPException
+
 
 from pydantic import BaseModel
 from tortoise import Model
@@ -14,23 +15,23 @@ AnyTortoiseModel = TypeVar('AnyTortoiseModel', bound=Model)
 async def checking_id_for_existence(tortoise_model_class: Type[AnyTortoiseModel], entity_id: int):
     try:
         await tortoise_model_class.get(id=entity_id)
-    except DoesNotExist:
+    except DoesNotExist as e:
         raise HTTPException(status_code=404,
-                            detail=f"{tortoise_model_class.__name__} obj with id: {entity_id} not found")
+                            detail=f"{tortoise_model_class.__name__} obj with id: {entity_id} not found") from e
 
 
 async def validation_date(event_data: AnyPydanticModel, event_id=-1):
     await checking_id_for_existence(Employee, event_data.employee_id)
 
     if event_data.begin > event_data.end:
-        raise HTTPException(status_code=422, detail=f'Date entered incorrectly (value begin > end)')
+        raise HTTPException(status_code=422, detail='Date entered incorrectly (value begin > end)')
 
     events = await Event.filter(employee_id=event_data.employee_id)
     for event in events:
         if (event.id != event_id) and ((event_data.begin <= event.begin <= event_data.end)
                                        or (event.end >= event_data.begin >= event.begin)):
             raise HTTPException(status_code=422,
-                                detail=f'Intersection with another event (check the list of events and try again)')
+                                detail='Intersection with another event (check the list of events and try again)')
 
 
 async def create_entity(tortoise_model_class: Type[AnyTortoiseModel],

@@ -1,0 +1,24 @@
+
+services:
+  web:
+    build: ../.
+    container_name: api-user-service
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+    env_file:
+      - $env
+    command: ["pylint","--verbose", "src"]
+
+
+  db:
+    image: postgres:14
+    container_name: database-user-service
+    command: -p 5435
+    expose:
+      - 5435
+    env_file:
+      - $env
+
+

@@ -6,6 +6,7 @@ services:
 stages:
   - build
   - test
+  - review
 
 build:
   stage: build
@@ -20,4 +21,13 @@ test:
     - docker compose -f docker/docker-compose.yml up  --abort-on-container-exit
   dependencies:
     - build
+
+review:
+  stage: review
+  only:
+    - develop
+    - ci
+  script:
+    - docker compose -f docker/docker-compose-lint.yml up  --abort-on-container-exit
+  allow_failure: true
 

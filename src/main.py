@@ -2,8 +2,8 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
-from config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 from tortoise.contrib.fastapi import RegisterTortoise
+from config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 
 from routers.employees import router as router_employee
 from routers.events import router as router_event
