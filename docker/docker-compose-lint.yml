@@ -1,6 +1,0 @@
-
-services:
-  web:
-    build: ../.
-    container_name: api-user-service
-    command: ["pylint","--verbose", "src"]

@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     db_port: str
     db_name: str
 
+    host: str
+    host_port: str
+
     run_test: bool
 
     test_db_user: str = None
