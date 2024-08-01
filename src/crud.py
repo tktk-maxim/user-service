@@ -53,6 +53,11 @@ async def get_all_entity(tortoise_model_class: Type[AnyTortoiseModel]) -> List[A
     return await tortoise_model_class.all()
 
 
+async def get_auth_entity(tortoise_model_class: Type[AnyTortoiseModel], login: str, password: str):
+    entity = await tortoise_model_class.filter(login=login, password=password).first()
+    return await get_entity(tortoise_model_class, entity.id)
+
+
 async def get_entity(tortoise_model_class: Type[AnyTortoiseModel], entity_id: int) -> AnyTortoiseModel:
     await checking_id_for_existence(tortoise_model_class, entity_id)
     return await tortoise_model_class.get(id=entity_id)

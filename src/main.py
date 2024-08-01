@@ -8,6 +8,7 @@ from config import get_db_url, settings
 from routers.employees import router as router_employee
 from routers.events import router as router_event
 from routers.subdivisions import router as router_subdivision
+from routers.auth import router as router_auth
 
 
 @asynccontextmanager
@@ -48,4 +49,10 @@ app.include_router(
     router=router_subdivision,
     prefix="/subdivision",
     tags=["Subdivision"]
+)
+
+app.include_router(
+    router=router_auth,
+    prefix="/auth",
+    tags=["Auth"]
 )

@@ -53,3 +53,8 @@ class EventForCard(BaseModel):
 class EmployeeCard(BaseModel):
     employee: EmployeeCreate
     events: List[EventForCard]
+
+
+class Auth(BaseModel):
+    login: str
+    password: str
