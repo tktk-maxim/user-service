@@ -13,7 +13,9 @@ async def test_positive_create_event(client: AsyncClient) -> None:
       "password": "t_pass",
       "subdivision_id": subdivision.json()["id"],
       "email": "user@example.com",
-      "leader": False
+      "leader": False,
+      "chat_id": 0,
+      "telegram_name": "asd"
     })
     response = await client.post("/event/create/", json={
       "begin": "2024-06-09",

@@ -13,7 +13,9 @@ async def test_positive_create_employee(client: AsyncClient) -> None:
       "password": "t_log",
       "subdivision_id": subdivision.json()["id"],
       "email": "user@example.com",
-      "leader": True
+      "leader": True,
+      "chat_id": 0,
+      "telegram_name": "asd"
     })
     assert response.status_code == 200
     assert response.json()["first_name"] == "Ivan"
@@ -29,7 +31,9 @@ async def test_negative_create_without_first_name(client: AsyncClient) -> None:
       "password": "t_log",
       "subdivision_id": "str",
       "email": "user@example.com",
-      "leader": True
+      "leader": True,
+      "chat_id": 0,
+      "telegram_name": "asd"
     })
     assert response.status_code == 422
     assert response.json()["detail"][0]["msg"] == "Value error, Field cannot be empty"
@@ -45,7 +49,9 @@ async def test_negative_create_employee(client: AsyncClient) -> None:
       "password": "t_log",
       "subdivision_id": "str",
       "email": "user@example.com",
-      "leader": True
+      "leader": True,
+      "chat_id": 0,
+      "telegram_name": "asd"
     })
     assert response.status_code == 422
     assert response.json()["detail"][0]["msg"] == ("Input should be a valid integer, "
@@ -65,7 +71,9 @@ async def test_positive_update_employee(client: AsyncClient) -> None:
       "password": "t_log",
       "subdivision_id": response.json()[-1]["subdivision_id"],
       "email": "user@example.com",
-      "leader": True
+      "leader": True,
+      "chat_id": 0,
+      "telegram_name": "asd"
     })
     assert response.status_code == 200
     assert response.json()["middle_name"] == "Ivanovich"

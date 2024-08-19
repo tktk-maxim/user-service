@@ -55,6 +55,18 @@ async def get_all_entity(tortoise_model_class: Type[AnyTortoiseModel]) -> List[A
 
 async def get_auth_entity(tortoise_model_class: Type[AnyTortoiseModel], login: str, password: str):
     entity = await tortoise_model_class.filter(login=login, password=password).first()
+    if not entity:
+        raise HTTPException(status_code=404,
+                            detail=f"{tortoise_model_class.__name__} obj not found")
+    return await get_entity(tortoise_model_class, entity.id)
+
+
+async def get_entity_with_params(tortoise_model_class: Type[AnyTortoiseModel], search_params: AnyTortoiseModel):
+    params = {key: value for key, value in search_params.dict().items() if value is not None}
+    entity = await tortoise_model_class.filter(**params).first()
+    if not entity:
+        raise HTTPException(status_code=404,
+                            detail=f"{tortoise_model_class.__name__} obj not found")
     return await get_entity(tortoise_model_class, entity.id)
 
 

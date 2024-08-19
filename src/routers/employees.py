@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from crud import create_entity, get_all_entity, get_employee_card, delete_entity, update_entity, search_employee
-from crud import checking_id_for_existence
-from schemas import EmployeeIn, EmployeeCreate, EmployeeCard
+from crud import checking_id_for_existence, get_entity_with_params
+from schemas import EmployeeIn, EmployeeCreate, EmployeeCard, EmployeeParams
 from models import Employee, Subdivision
 
 
@@ -53,3 +53,9 @@ async def delete_employee_view(employee_id: int):
 async def search_employee_view(first_name="", last_name="", middle_name="",
                                login="", email=""):
     return await search_employee(first_name, last_name, middle_name, login, email)
+
+
+@router.get("/entity_with_params/", response_model=Optional[EmployeeIn])
+async def get_entity_with_params_view(data: EmployeeParams = Depends()):
+    return await get_entity_with_params(Employee, data)
+

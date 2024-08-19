@@ -32,6 +32,8 @@ class EmployeeCreate(BaseModel):
     subdivision_id: int
     email: EmailStr | None = Field(default="example@gmail.com")
     leader: bool | None = Field(default=False, null=True)
+    chat_id: int | None = Field(default=0, null=True)
+    telegram_name: str
 
     @field_validator('first_name', 'last_name', 'login')
     def not_empty(cls, value):
@@ -58,3 +60,15 @@ class EmployeeCard(BaseModel):
 class Auth(BaseModel):
     login: str
     password: str
+
+
+class EmployeeParams(BaseModel):
+    first_name: str | None = None
+    last_name: str | None = None
+    login: str | None = None
+    password: str | None = None
+    subdivision_id: int | None = None
+    email: EmailStr | None = None
+    chat_id: str | None = None
+    telegram_name: str | None = None
+

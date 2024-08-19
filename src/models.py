@@ -11,6 +11,8 @@ class Employee(Model):
     email = fields.CharField(max_length=100)
     subdivision = fields.ForeignKeyField('models.Subdivision', on_delete=fields.CASCADE)
     leader = fields.BooleanField(default=False, null=True)
+    chat_id = fields.IntField(default=None, null=True)
+    telegram_name = fields.CharField(max_length=255, default=None, null=True)
 
     def __str__(self):
         return self.last_name
