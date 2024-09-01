@@ -3,3 +3,4 @@ __pycache__/
 .venv
 .coverage
 .env-non-dev
+.gitlab-ci.yml
